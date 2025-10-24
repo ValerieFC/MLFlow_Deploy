@@ -9,6 +9,7 @@ import pandas as pd
 from mlflow.models import infer_signature
 import sys
 import traceback
+import pickle # Añadí esta importación
 
 print(f"--- Debug: Initial CWD: {os.getcwd()} ---")
 
@@ -74,6 +75,12 @@ model.fit(X_train, y_train)
 preds = model.predict(X_test)
 mse = mean_squared_error(y_test, preds)
 
+# ✅ GUARDAR MODELO COMO PICKLE EN LA RAÍZ DEL PROYECTO
+model_path = os.path.join(workspace_dir, "model.pkl")
+with open(model_path, 'wb') as f:
+    pickle.dump(model, f)
+print(f"✅ Modelo guardado en: {model_path}")
+
 # --- Iniciar Run de MLflow ---
 print(f"--- Debug: Iniciando run de MLflow en Experimento ID: {experiment_id} ---") # Añadir ID aquí
 run = None
@@ -115,3 +122,4 @@ except Exception as e:
     else:
          print("El objeto Run no se creó con éxito.")
     sys.exit(1)
+    
